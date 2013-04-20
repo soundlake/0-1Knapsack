@@ -6,11 +6,11 @@
 // name : Sinyeol An
 // stdId: 20200320
 // date : 2013. 4. 18
-// file : greedy.c
-// dscr : Greedy algorithm is here.
+// file : branch_and_bound.c
+// dscr : Branch & Bound algorithm is here.
 
 #include "header.h"
-result_t greedy(lootPtr datas, int size){
+result_t branch_and_bound(lootPtr datas, int size){
     result_t result;
 
     return result;

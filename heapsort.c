@@ -10,15 +10,29 @@
 // dscr : main functions are here.
 
 #include "header.h"
-void heapsort(lootPtr datas, int size){
+void heap_sort(lootPtr datas, int size){
     // variable declaration
     int i;
     int s = size;
     loot tmp;
+#ifdef DEBUG_HEAP_SORT
+    lootPtr test;
+    fputs("heap_sort: original datas\n", stdout);
+    fprintDs(stdout, datas, size);
+#endif
 
-    // build max-heap
-    for(i = size / 2; i >= 0; i--)
+    // build min-heap
+    for(i = size/2 - 1; i >= 0; i--){
+#ifdef DEBUG_HEAP_SORT
+        fprintf(stdout, "heap_sort: building min-heap %d iteration\n", i);
+        fprintDs(stdout, datas, size);
+#endif
         reheap(datas, size, i);
+    }
+#ifdef DEBUG_HEAP_SORT
+    fputs("heap_sort: min-heaped datas\n", stdout);
+    fprintDs(stdout, datas, size);
+#endif
 
     // sort!
     for(i = size - 1; i >= 0; i--){
@@ -26,6 +40,10 @@ void heapsort(lootPtr datas, int size){
         datas[0] = datas[i];
         datas[i] = tmp;
         reheap(datas, --s, 0);
+#ifdef DEBUG_HEAP_SORT
+        fprintf(stdout, "heap_sort:heap_sort//sort! %5d iteration\n", i);
+        fprintDs(stdout, datas, size);
+#endif
     }
 }
 void reheap(lootPtr datas, int size, int root){
@@ -33,22 +51,24 @@ void reheap(lootPtr datas, int size, int root){
     int l = root * 2 + 1;
     int r = root * 2 + 2;
     int chosen;
-    lootPtr son;
     loot tmp;
 
     if(l < size){// in range
-        // find bigger child
-        if(datas[l].value_per_weight > datas[r].value_per_weight){
-            chosen = l;
-        else
+#ifdef DEBUG_HEAP_SORT
+        fputs("heap_sort: reheaped datas\n", stdout);
+        fprintDs(stdout, datas, size);
+#endif
+        // find smaller child
+        if(r < size && datas[l].value_per_weight > datas[r].value_per_weight)
             chosen = r;
-        son = datas+chosen;
+        else
+            chosen = l;
 
-        // compare root with bigger child
-        if(son->value_per_weight > datas[root].value_per_weight){
+        // compare root with smaller child
+        if(datas[chosen].value_per_weight < datas[root].value_per_weight){
             tmp = datas[root];
-            datas[root] = *son;
-            *son = tmp;
+            datas[root] = datas[chosen];
+            datas[chosen] = tmp;
             reheap(datas, size, chosen);
         }
     }

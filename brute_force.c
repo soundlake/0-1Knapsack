@@ -6,11 +6,11 @@
 // name : Sinyeol An
 // stdId: 20200320
 // date : 2013. 4. 18
-// file : greedy.c
-// dscr : Greedy algorithm is here.
+// file : brute_force.c
+// dscr : Brute Force algorithm is here.
 
 #include "header.h"
-result_t greedy(lootPtr datas, int size){
+result_t brute_force(lootPtr datas, int size){
     result_t result;
 
     return result;
