@@ -11,6 +11,7 @@
 
 #include "header.h"
 
+#ifdef DEBUG_TEST
 int main(void){
     int num = 10;
     int i;
@@ -24,6 +25,7 @@ int main(void){
 
     return 0;
 }
+#endif
 void fprintD(FILE* target, loot data){
     fprintf(target, "|%7d|%7d|%7.3f|\n", data.value,
                                          data.weight,

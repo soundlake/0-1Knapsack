@@ -9,10 +9,14 @@
 // file : main.c
 // dscr : main functions are here.
 
+//////////////////////////////////////// PRE-PROCESS
 #include "header.h"
 const int SIZES_OF_DATA[] = {10, 20, 30, 40, 50, 100, 500, 1000, 5000, 10000};
 
+//////////////////////////////////////// LOCAL FUNCTION DECLARATION
 void fprintr(FILE* target, result_t **r, int rows, int cols);
+
+//////////////////////////////////////// MAIN FUNCTION DEFINITION
 #ifndef DEBUG_TEST
 int main(int argc, const char** args){
     // variable declaration
@@ -32,12 +36,19 @@ int main(int argc, const char** args){
         }
     }
 #ifdef DEBUG_MAIN
+    fputs("CHECK memory allocation for 'result'.\n", stdout);
     fprintr(stdout, results, NUMBER_OF_TESTS, NUMBER_OF_ALGORITHMS);
 #endif
 
     // test!
-    for(i = 0; i < NUMBER_OF_TESTS; i++){
+    //for(i = 0; i < NUMBER_OF_TESTS; i++){
+    for(i = 0; i < 3; i++){
         datas = generate(SIZES_OF_DATA[i]);
+#ifdef DEBUG_MAIN
+        fprintDs(stdout, datas, SIZES_OF_DATA[i]);
+#endif
+        results[i][0] = brute_force(datas, SIZES_OF_DATA[i]);
+        results[i][1] = greedy(datas, SIZES_OF_DATA[i]);
         /*
          * To Do
          */
@@ -55,11 +66,13 @@ int main(int argc, const char** args){
     return 0;
 }
 #endif
+
+//////////////////////////////////////// MAIN FUNCTION DEFINITION
 void fprintr(FILE* target, result_t **r, int rows, int cols){
     int row, col;
 
     // format
-    fputs("+-------------------------------------------------------------------------+\n", target);
+    fputs("+---------+---------------------------------------------------------------+\n", target);
     fputs("|         |      Processing time in second / Maximum benefit value        |\n", target);
     fputs("|Number of+---------------+---------------+---------------+---------------+\n", target);
     fputs("|  items  |  Brute Force  |     Greedy    |  Dynamic Prog.|  Branch & Bnd.|\n", target);
@@ -67,9 +80,13 @@ void fprintr(FILE* target, result_t **r, int rows, int cols){
     for(row = 0; row < rows; row++){
         fprintf(target, "|  %5d  |", SIZES_OF_DATA[row]);
         for(col = 0; col < cols; col++){
-            fprintf(target, "%10.3f/%3d |", r[row][col].seconds, r[row][col].max_value);
+            fprintf(target, " T: %8.3f s |", r[row][col].seconds);
         }
-        fputs("\n", target);
+        fputs("\n|         |", target);
+        for(col = 0; col < cols; col++){
+            fprintf(target, " V: %8d W |", r[row][col].max_value);
+        }
+        fputs("\n+---------+---------------+---------------+---------------+---------------+\n", target);
     }
-    fputs("+---------+---------------+---------------+---------------+---------------+\n\n", target);
+    fputs("\n", target);
 }

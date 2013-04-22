@@ -15,12 +15,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 #define NUMBER_OF_TESTS 10
 #define NUMBER_OF_ALGORITHMS 4
 #define MAX_VALUE 500
 #define MAX_WEIGHT 100
-#define W_FACTO 25
+#define W_FACTOR 25
+#define TIME_LIMIT 1200 // 20*60 seconds
 
 typedef struct _loot{
     int value;
