@@ -31,8 +31,8 @@ int main(int argc, const char** args){
         results[i] = (result_t*)calloc(NUMBER_OF_ALGORITHMS, sizeof(result_t));
         assert(results[i] != NULL);
         for(j = 0; j < NUMBER_OF_ALGORITHMS; j++){
-            results[i][j].seconds = 0;
-            results[i][j].max_value = 0;
+            results[i][j].seconds = -1;
+            results[i][j].max_value = -1;
         }
     }
 #ifdef DEBUG_MAIN
@@ -41,17 +41,16 @@ int main(int argc, const char** args){
 #endif
 
     // test!
-    //for(i = 0; i < NUMBER_OF_TESTS; i++){
-    for(i = 0; i < 3; i++){
+    for(i = 0; i < NUMBER_OF_TESTS; i++){
+    //for(i = 0; i < 5; i++){
         datas = generate(SIZES_OF_DATA[i]);
 #ifdef DEBUG_MAIN
         fprintDs(stdout, datas, SIZES_OF_DATA[i]);
 #endif
         results[i][0] = brute_force(datas, SIZES_OF_DATA[i]);
         results[i][1] = greedy(datas, SIZES_OF_DATA[i]);
-        /*
-         * To Do
-         */
+        results[i][2] = dynamic_programming(datas, SIZES_OF_DATA[i]);
+        results[i][3] = branch_and_bound(datas, SIZES_OF_DATA[i]);
 
         fprintr(stdout, results, NUMBER_OF_TESTS, NUMBER_OF_ALGORITHMS);
         free(datas);

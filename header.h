@@ -22,7 +22,7 @@
 #define MAX_VALUE 500
 #define MAX_WEIGHT 100
 #define W_FACTOR 25
-#define TIME_LIMIT 1200 // 20*60 seconds
+#define TIME_LIMIT 300 // 5*60 seconds
 
 typedef struct _loot{
     int value;

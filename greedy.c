@@ -33,7 +33,7 @@ result_t greedy(lootPtr datas, int size){
     }
 
     // time check
-    result.seconds = (float)difftime(time(NULL), start_time);
+    result.seconds = difftime(time(NULL), start_time);
 
     return result;
 }

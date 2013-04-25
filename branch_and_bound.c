@@ -19,7 +19,7 @@ result_t branch_and_bound(lootPtr datas, int size){
 
     // if it takes too long, just quit
     if((int)difftime(time(NULL), start_time) > TIME_LIMIT)
-        break;
+        //break;
 
     // time check
     result.seconds = (float)difftime(time(NULL), start_time);
