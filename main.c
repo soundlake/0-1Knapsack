@@ -31,8 +31,8 @@ int main(int argc, const char** args){
         results[i] = (result_t*)calloc(NUMBER_OF_ALGORITHMS, sizeof(result_t));
         assert(results[i] != NULL);
         for(j = 0; j < NUMBER_OF_ALGORITHMS; j++){
-            results[i][j].seconds = -1;
-            results[i][j].max_value = -1;
+            results[i][j].seconds = 0;
+            results[i][j].max_value = 0;
         }
     }
 #ifdef DEBUG_MAIN
@@ -42,16 +42,17 @@ int main(int argc, const char** args){
 
     // test!
     for(i = 0; i < NUMBER_OF_TESTS; i++){
-    //for(i = 0; i < 5; i++){
         datas = generate(SIZES_OF_DATA[i]);
 #ifdef DEBUG_MAIN
         fprintDs(stdout, datas, SIZES_OF_DATA[i]);
 #endif
         results[i][0] = brute_force(datas, SIZES_OF_DATA[i]);
+        fprintr(stdout, results, NUMBER_OF_TESTS, NUMBER_OF_ALGORITHMS);
         results[i][1] = greedy(datas, SIZES_OF_DATA[i]);
+        fprintr(stdout, results, NUMBER_OF_TESTS, NUMBER_OF_ALGORITHMS);
         results[i][2] = dynamic_programming(datas, SIZES_OF_DATA[i]);
+        fprintr(stdout, results, NUMBER_OF_TESTS, NUMBER_OF_ALGORITHMS);
         results[i][3] = branch_and_bound(datas, SIZES_OF_DATA[i]);
-
         fprintr(stdout, results, NUMBER_OF_TESTS, NUMBER_OF_ALGORITHMS);
         free(datas);
     }
@@ -79,11 +80,17 @@ void fprintr(FILE* target, result_t **r, int rows, int cols){
     for(row = 0; row < rows; row++){
         fprintf(target, "|  %5d  |", SIZES_OF_DATA[row]);
         for(col = 0; col < cols; col++){
-            fprintf(target, " T: %8.3f s |", r[row][col].seconds);
+            if(r[row][col].seconds >= 0)
+                fprintf(target, " T:%9.5f s |", r[row][col].seconds);
+            else
+                fprintf(target, "IT TOOK SO LONG|");
         }
         fputs("\n|         |", target);
         for(col = 0; col < cols; col++){
-            fprintf(target, " V: %8d W |", r[row][col].max_value);
+            if(r[row][col].seconds >= 0)
+                fprintf(target, " V: %8d W |", r[row][col].max_value);
+            else
+                fprintf(target, " INVALID RESULT|");
         }
         fputs("\n+---------+---------------+---------------+---------------+---------------+\n", target);
     }

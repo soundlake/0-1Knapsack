@@ -17,6 +17,7 @@ result_t greedy(lootPtr datas, int size){
     int total_weight = 0;
     int i;
     // start stop watch
+    clock_t start_clock = clock();
     time_t start_time = time(NULL);
 
     // algorithm body
@@ -30,10 +31,12 @@ result_t greedy(lootPtr datas, int size){
             continue;
         }
         result.max_value += datas[i].value;
+        result.seconds = (float)(clock() - start_clock) / CLOCKS_PER_SEC;
     }
 
     // time check
-    result.seconds = difftime(time(NULL), start_time);
+    if(result.seconds > 100 || result.seconds < 0)
+        result.seconds = difftime(time(NULL), start_time);
 
     return result;
 }

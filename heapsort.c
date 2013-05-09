@@ -10,6 +10,7 @@
 // dscr : main functions are here.
 
 #include "header.h"
+void swapLoot(lootPtr a, lootPtr b);
 void heap_sort(lootPtr datas, int size){
     // variable declaration
     int i;
@@ -51,7 +52,6 @@ void reheap(lootPtr datas, int size, int root){
     int l = root * 2 + 1;
     int r = root * 2 + 2;
     int chosen;
-    loot tmp;
 
     if(l < size){// in range
 #ifdef DEBUG_HEAP_SORT
@@ -66,10 +66,19 @@ void reheap(lootPtr datas, int size, int root){
 
         // compare root with smaller child
         if(datas[chosen].value_per_weight < datas[root].value_per_weight){
-            tmp = datas[root];
-            datas[root] = datas[chosen];
-            datas[chosen] = tmp;
+            swapLoot(datas+chosen, datas+root);
             reheap(datas, size, chosen);
         }
     }
+}
+void swapLoot(lootPtr a, lootPtr b){
+    int t_value = a->value;
+    int t_weght = a->weight;
+    float t_vpw = a->value_per_weight;
+    a->value = b->value;
+    a->weight = b->weight;
+    a->value_per_weight = b->value_per_weight;
+    b->value = t_value;
+    b->weight = t_weght;
+    b->value_per_weight = t_vpw;
 }

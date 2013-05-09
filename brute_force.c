@@ -26,14 +26,12 @@ result_t brute_force(lootPtr datas, int size){
     long_long_int combination;
     int i;
     // start stop watch
+    clock_t start_clock = clock();
     time_t start_time = time(NULL);
 
-    // if size is too big, just quit.
-    if(size > 2*B){
-        result.seconds = 999.999;
-        result.max_value = -1;
-        return result;
-    }
+    // initialize result
+    result.seconds = 0;
+    result.max_value = 0;
 
     // make combination with binary number
     if(size <= B){
@@ -52,13 +50,21 @@ result_t brute_force(lootPtr datas, int size){
             // find maximum value
             if(total_value > result.max_value)
                 result.max_value = total_value;
+
+            // time check
+            if(result.seconds < 100)
+                result.seconds = (float)(clock() - start_clock) / CLOCKS_PER_SEC;
+            else
+                result.seconds = difftime(time(NULL), start_time);
             // if it takes too long, just quit
-            if(difftime(time(NULL), start_time) > TIME_LIMIT)
-                break;
+            if(result.seconds > TIME_LIMIT){
+                result.seconds = -1;
+                return result;
+            }
         }
     } else{
         for(combination.h = 0; combination.h < (1<<(size-B)); combination.h++){
-            for(combination.l = 1; combination.l < (1<<B); combination.l++){
+            for(combination.l = 1; combination.l < (ULLONG_MAX); combination.l++){
                 total_weight = total_value = 0;
                 for(i = 0; i < size; i++){
                     if(combination.h & (1<<i/B) || combination.l & (1<<i%B)){ // mask!
@@ -73,18 +79,20 @@ result_t brute_force(lootPtr datas, int size){
                 // find maximum value
                 if(total_value > result.max_value)
                     result.max_value = total_value;
+
+                // time check
+                if(result.seconds < 100)
+                    result.seconds = (float)(clock() - start_clock) / CLOCKS_PER_SEC;
+                else
+                    result.seconds = difftime(time(NULL), start_time);
                 // if it takes too long, just quit
-                if(difftime(time(NULL), start_time) > TIME_LIMIT)
-                    break;
+                if(result.seconds > TIME_LIMIT){
+                    result.seconds = -1;
+                    return result;
+                }
             }
-            // if it takes too long, just quit
-            if(difftime(time(NULL), start_time) > TIME_LIMIT)
-                break;
         }
     }
-
-    // time check
-    result.seconds = difftime(time(NULL), start_time);
 
     return result;
 }

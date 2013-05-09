@@ -15,56 +15,47 @@ result_t dynamic_programming(lootPtr datas, int size){
     // variable declaration
     const int W = size * W_FACTOR;
     int k, w;
-    int *B0, *B1;
+    int **B;
     result_t result;
     // start stop watch
-    clock_t start_clock = clock();
     time_t start_time = time(NULL);
 
-    // initialize result
-    result.seconds = 0;
-    result.max_value = 0;
-
     // make a table
-    B0 = (int*)calloc(W + 1, sizeof(int));  // [1, W]
-    B1 = (int*)calloc(W + 1, sizeof(int));  // [1, W]
+    B = (int**)calloc(size + 1, sizeof(int*));    // [1, size]
+    for(k = 0; k <= size; k++)
+        B[k] = (int*)calloc(W + 1, sizeof(int));  // [1, W]
 
     // initialize the table
     for(w = 0; w <= W; w++)
-        B0[w] = B1[w] = 0;
+        B[0][w] = 0;
+    for(k = 1; k <= size; k++)
+        B[k][0] = 0;
 
-    for(k = 1; k <= size; k++){
-        // exchange B0 with B1
-        int *tmp = B0;
-        B0 = B1;
-        B1 = tmp;
-
-        for(w = 1; w <= W; w++){
+    for(w = 1; w <= W; w++){
+        for(k = 1; k <= size; k++){
             // temporal local variable
             int wi = datas[k-1].weight; // range of index: [0, size-1]
             int vi = datas[k-1].value;
 
-            if((wi <= w) && (vi + B0[w-wi] > B0[w]))
-                B1[w] = vi + B0[w-wi];
+            if((wi <= w) && (vi + B[k-1][w-wi] > B[k-1][w]))
+                B[k][w] = vi + B[k-1][w-wi];
             else
-                B1[w] = B0[w];
+                B[k][w] = B[k-1][w];
 
-            if(result.seconds < 100)
-                result.seconds = (float)(clock() - start_clock) / CLOCKS_PER_SEC;
-            else
-                result.seconds = difftime(time(NULL), start_time);
             // if it takes too long, just quit
-            if(result.seconds > TIME_LIMIT){
-                result.seconds = -1;
+            if((int)difftime(time(NULL), start_time) > TIME_LIMIT)
                 break;
-            }
         }
     }
-    result.max_value = B1[W];
+    result.max_value = B[size][W];
 
     // reallocate table
-    free(B0);
-    free(B1);
+    for(k = 0; k < size; k++)
+        free(B[k]);
+    free(B);
+
+    // time check
+    result.seconds = (float)difftime(time(NULL), start_time);
 
     return result;
 }
